@@ -1,8 +1,8 @@
 package match
 
 import (
-	"github.com/GuibuAdrian/goFutbet/interfaces"
-	"github.com/GuibuAdrian/goFutbet/models"
+	"github.com/GuibuAdrian/go-Futbet/interfaces"
+	"github.com/GuibuAdrian/go-Futbet/models"
 	"sort"
 	"time"
 )

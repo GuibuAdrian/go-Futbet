@@ -2,7 +2,7 @@ package dao
 
 import (
 	"errors"
-	"github.com/GuibuAdrian/goFutbet/models"
+	"github.com/GuibuAdrian/go-Futbet/models"
 )
 
 type TeamRepository struct {

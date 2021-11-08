@@ -1,6 +1,6 @@
 package interfaces
 
-import "github.com/GuibuAdrian/goFutbet/models"
+import "github.com/GuibuAdrian/go-Futbet/models"
 
 type TeamDaoI interface {
 	Create(models.Team)

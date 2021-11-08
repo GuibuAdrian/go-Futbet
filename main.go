@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/GuibuAdrian/goFutbet/dao"
-	"github.com/GuibuAdrian/goFutbet/match"
-	"github.com/GuibuAdrian/goFutbet/models"
+	"github.com/GuibuAdrian/go-Futbet/dao"
+	"github.com/GuibuAdrian/go-Futbet/match"
+	"github.com/GuibuAdrian/go-Futbet/models"
 	"time"
 )
 

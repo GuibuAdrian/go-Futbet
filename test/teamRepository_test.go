@@ -1,8 +1,8 @@
 package test_test
 
 import (
-	"github.com/GuibuAdrian/goFutbet/dao"
-	"github.com/GuibuAdrian/goFutbet/models"
+	"github.com/GuibuAdrian/go-Futbet/dao"
+	"github.com/GuibuAdrian/go-Futbet/models"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
