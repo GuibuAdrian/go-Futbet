@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/GuibuAdrian/go-Futbet/bet"
 	"github.com/GuibuAdrian/go-Futbet/dao"
 	"github.com/GuibuAdrian/go-Futbet/match"
 	"github.com/GuibuAdrian/go-Futbet/models"
@@ -41,4 +42,12 @@ func main() {
 
 	fmt.Println(match11.GetHomeTotalGoals())
 	fmt.Println(match11.GetAwayTotalGoals())
+
+	g := models.InitGambler("Han Solo", 1)
+
+	playerThatScoreGoal,_ := playerDao.Read(1121111)
+	bet2 := bet.NewBetBuilder(1000, *g, *match11).WithPlayerThatScoreFirstGoal(playerThatScoreGoal).Build()
+	bpsfg := bet.PlayerScoreFirstGoal{}
+
+	fmt.Println(bpsfg.Win(*bet2))
 }

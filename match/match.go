@@ -53,3 +53,19 @@ func (m *Match) GetHomeGoalPos(pos int) models.Goal {
 	}
 	return models.Goal{}
 }
+
+func (m *Match) GetAllGoals() []models.Goal {
+	allGoals := append(m.score.GetHomeGoals(), m.score.GetAwayGoals()...)
+	sort.Slice(allGoals, func(i, j int) bool {
+		return allGoals[i].GetMinute() < allGoals[j].GetMinute()
+	})
+
+	return allGoals
+}
+
+func (m *Match) GetAllGoalsPos(pos int) models.Goal {
+	if len(m.GetAllGoals()) > pos {
+		return m.GetAllGoals()[pos]
+	}
+	return models.Goal{}
+}

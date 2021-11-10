@@ -1,9 +1,14 @@
 package bet
 
-type BetAwayWinner struct {
+import "fmt"
+
+type PlayerScoreFirstGoal struct {
 
 }
 
-func (bAW *BetAwayWinner) Win(b Bet) bool {
-	return b.playerThatScoreFirstGoal.GetNumber() > 1
+func (bAW *PlayerScoreFirstGoal) Win(b Bet) bool {
+	firstGoal := b.match.GetAllGoalsPos(0)
+	idPlayer := firstGoal.GetPlayer().GetId()
+	fmt.Println(idPlayer)
+	return b.PlayerThatScoreFirstGoal.GetId() == idPlayer
 }

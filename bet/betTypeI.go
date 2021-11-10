@@ -1,9 +1,5 @@
-package interfaces
+package bet
 
-import (
-	"github.com/GuibuAdrian/go-Futbet/bet"
-)
-
-type BetTypeI interface {
-	Win(bet bet.Bet) bool
+type TypeI interface {
+	Win(bet Bet) bool
 }
