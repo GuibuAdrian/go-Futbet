@@ -11,8 +11,8 @@ type Match struct {
 	home		interfaces.TeamRepositoryI
 	away		interfaces.TeamRepositoryI
 	matchNumber	int
-	dateMatch 	time.Time
-	score     	models.Score
+	dateMatch time.Time
+	score     models.Score
 }
 
 func InitMatch(home, away interfaces.TeamRepositoryI, matchN int, date time.Time, s models.Score) *Match {

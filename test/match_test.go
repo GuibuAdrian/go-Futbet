@@ -1,10 +1,10 @@
 package test_test
 
 import (
+	"github.com/GuibuAdrian/go-Futbet/match"
 	"time"
 
 	"github.com/GuibuAdrian/go-Futbet/dao"
-	"github.com/GuibuAdrian/go-Futbet/match"
 	"github.com/GuibuAdrian/go-Futbet/models"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
