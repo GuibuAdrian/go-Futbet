@@ -11,7 +11,9 @@ type Bet struct {
 	match						match.Match
 	//Optional
 	PlayerThatScoreFirstGoal	models.Player
-	numberOfGoals				int
+	totalOfGoals				int
+	numberOfHomeGoals			int
+	numberOfAwayGoals			int
 }
 
 type Builder struct {
@@ -36,7 +38,13 @@ func (bb *Builder) WithPlayerThatScoreFirstGoal(p models.Player) *Builder {
 }
 
 func (bb *Builder) WithNumberOfGoals(numberGoals int) *Builder {
-	bb.bet.numberOfGoals = numberGoals
+	bb.bet.totalOfGoals = numberGoals
+	return bb
+}
+
+func (bb *Builder) WithNumberOfHomeAndAwayGoals(homeGoals, awayGoals int) *Builder {
+	bb.bet.numberOfHomeGoals = homeGoals
+	bb.bet.numberOfAwayGoals = awayGoals
 	return bb
 }
 

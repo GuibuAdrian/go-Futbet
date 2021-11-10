@@ -60,5 +60,44 @@ var _ = Describe("Bet", func() {
 				Expect(bpsfg.Win(*bet2)).To(Equal(false))
 			})
 		})
+
+		Context("Team Winner", func() {
+			It("Should be false", func() {
+				bet2 := betBuilder.Build()
+				bhw := bet.HomeWinner{}
+				Expect(bhw.Win(*bet2)).To(Equal(false))
+			})
+			It("Should be true", func() {
+				bet2 := betBuilder.Build()
+				baw := bet.AwayWinner{}
+				Expect(baw.Win(*bet2)).To(Equal(true))
+			})
+
+			Context("More than N Goals", func() {
+				It("Should be true", func() {
+					bet2 := betBuilder.WithNumberOfGoals(3).Build()
+					bmtng := bet.MoreThanNGoals{}
+					Expect(bmtng.Win(*bet2)).To(Equal(true))
+				})
+				It("Should be false", func() {
+					bet2 := betBuilder.WithNumberOfGoals(5).Build()
+					bmtng := bet.MoreThanNGoals{}
+					Expect(bmtng.Win(*bet2)).To(Equal(false))
+				})
+			})
+
+			Context("Exact result bet", func() {
+				It("Should be true", func() {
+					bet2 := betBuilder.WithNumberOfHomeAndAwayGoals(1, 4).Build()
+					ber := bet.ExactResult{}
+					Expect(ber.Win(*bet2)).To(Equal(true))
+				})
+				It("Should be false", func() {
+					bet2 := betBuilder.WithNumberOfHomeAndAwayGoals(2, 1).Build()
+					ber := bet.ExactResult{}
+					Expect(ber.Win(*bet2)).To(Equal(false))
+				})
+			})
+		})
 	})
 })
