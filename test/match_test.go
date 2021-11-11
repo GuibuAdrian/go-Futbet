@@ -82,7 +82,6 @@ var _ = Describe("Match", func() {
 				goalTest := match12.GetHomeGoalPos(2)
 				Expect(goalTest).To(Equal(models.Goal{}))
 			})
-
 		})
 	})
 })
