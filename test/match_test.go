@@ -53,7 +53,13 @@ var _ = Describe("Match", func() {
 			})
 		})
 
-		Context("Player who score first Goal", func() {
+		Context("Total of goals in match", func() {
+			It("Should be 5", func() {
+				Expect(len(match11.GetAllGoals())).To(Equal(5))
+			})
+		})
+
+		Context("Player who score first Goal in each team", func() {
 			It("Away should be De la Cruz", func() {
 				Expect(match11.GetAwayGoals()[0].GetPlayer().GetName()).To(Equal("De la Cruz"))
 			})
@@ -62,7 +68,18 @@ var _ = Describe("Match", func() {
 			})
 		})
 
-		Context("Player who score third Goal", func() {
+		Context("Player who score first Goal in match", func() {
+			It("Team should be De la Cruz", func() {
+				goal := match11.GetAllGoalsPos(0)
+				Expect(goal.GetPlayer().GetName()).To(Equal("De la Cruz"))
+			})
+			It("Team should be min 5", func() {
+				goal := match11.GetAllGoalsPos(0)
+				Expect(goal.GetMinute()).To(Equal(5))
+			})
+		})
+
+		Context("Player who score third Goal in each team", func() {
 			It("Away should be Carrascal", func() {
 				goalTest := match11.GetAwayGoalPos(2)
 				Expect(goalTest.GetPlayer().GetName()).To(Equal("Carrascal"))
