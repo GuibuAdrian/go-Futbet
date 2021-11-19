@@ -8,8 +8,8 @@ type Player struct {
 	team		Team
 }
 
-func InitPlayer(name string, number, id  int, position string, team Team) Player {
-	return Player{
+func InitPlayer(name string, number, id  int, position string, team Team) *Player {
+	return &Player{
 		name:     name,
 		number:   number,
 		id:       id,

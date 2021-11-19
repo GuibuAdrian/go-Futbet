@@ -2,10 +2,35 @@ package dao
 
 import (
 	"errors"
+	"fmt"
 	"github.com/GuibuAdrian/go-Futbet/models"
+	"github.com/kamva/mgm/v3"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
 type PlayerDao struct {
-	playerSlice []models.Player
+	playerSlice []*models.Player
+}
+
+type Player struct {
+	// DefaultModel adds _id, created_at and updated_at fields to the Model
+	Name		string	`json:"name" bson:"name"`
+	Id			int		`json:"id" bson:"id"`
+	Number		int		`json:"number" bson:"number"`
+	mgm.DefaultModel	`bson:",inline"`
+	Position 	string	`json:"position" bson:"position"`
+	TeamId		primitive.ObjectID
+}
+
+func NewPlayer(name string, id, number int, position string, teamId primitive.ObjectID) *Player {
+	return &Player{
+		Name:     name,
+		Id:       id,
+		Number:   number,
+		Position: position,
+		TeamId:   teamId,
+	}
 }
 
 var playerDaoInstance *PlayerDao
@@ -13,25 +38,42 @@ var playerDaoInstance *PlayerDao
 func PlayerDaoGetInstance() *PlayerDao {
 	if playerDaoInstance == nil {
 		playerDaoInstance = &PlayerDao{}
-
-		initializePlayerDao()
 	}
 
 	return playerDaoInstance
 }
 
-func (playerDao *PlayerDao) Create(player models.Player)  {
-	playerDao.playerSlice = append(playerDao.playerSlice, player)
+func (playerDao *PlayerDao) Create(player *models.Player)  {
+	playerCreate := NewPlayer(player.GetName(), player.GetId(), player.GetNumber(), player.GetPosition(), player.GetTeam().GetTeamObjId())
+
+	// Make sure to pass the model by reference.
+	errorCreate := mgm.Coll(playerCreate).Create(playerCreate)
+	if errorCreate != nil {
+		fmt.Println(errorCreate)
+	}
+	//playerDao.playerSlice = append(playerDao.playerSlice, player)
 }
 
-func (playerDao PlayerDao) Read(id int) (models.Player, error) {
-	player := models.Player{}
+func (playerDao PlayerDao) ReadByPlayerName(playerName string, teamId primitive.ObjectID) (*models.Player, error) {
+	player := &Player{}
+	coll := mgm.Coll(player)
+
+	_ = coll.First(bson.M{"name":playerName, "teamid": teamId}, player)
+	team,err := TeamDaoGetInstance().Read(teamId)
+	if err != nil {
+		fmt.Println(err)
+	}
+	playerM := models.InitPlayer(player.Name, player.Number, player.Number, player.Position, team)
+	return playerM, errors.New("player not found")
+}
+
+func (playerDao PlayerDao) Read(idP int) (*models.Player, error) {
+	player := &models.Player{}
 	for _, player := range playerDao.playerSlice {
-		if player.GetId() == id {
+		if player.GetId() == idP {
 			return player, nil
 		}
 	}
-
 	return player, errors.New("player not found")
 }
 
@@ -41,20 +83,20 @@ func (playerDao *PlayerDao) Update(player models.Player)  {
 
 func (playerDao *PlayerDao) Delete(player models.Player)  {
 	for posV, playerVal := range playerDao.playerSlice {
-		if playerVal == player{
+		if playerVal == &player{
 			playerDao.playerSlice = append(playerDao.playerSlice[:posV], playerDao.playerSlice[posV+1:]...)
 			break
 		}
 	}
 }
 
-func (playerDao PlayerDao) GetPlayerSlice() []models.Player{
+func (playerDao PlayerDao) GetPlayerSlice() []*models.Player{
 	return playerDao.playerSlice
 }
 
 func initializePlayerDao() {
-	river, _ := TeamDaoGetInstance().Read(1)
-	newells, _ := TeamDaoGetInstance().Read(2)
+	river, _ := TeamDaoGetInstance().ReadByName("River")
+	newells, _ := TeamDaoGetInstance().ReadByName("Newells")
 	PlayerDaoGetInstance().Create(models.InitPlayer("Armani", 1, 1111221, "arquero", river ))
 	PlayerDaoGetInstance().Create(models.InitPlayer("Angileri", 3, 3322333, "defensor", river))
 	PlayerDaoGetInstance().Create(models.InitPlayer("P. Diaz", 17, 1717171, "defensor", river))
@@ -77,5 +119,4 @@ func initializePlayerDao() {
 	PlayerDaoGetInstance().Create(models.InitPlayer("Castro", 36, 3636363, "medio C", newells))
 	PlayerDaoGetInstance().Create(models.InitPlayer("Sordo", 26, 2626262, "medio C", newells))
 	PlayerDaoGetInstance().Create(models.InitPlayer("Scocco", 32, 3232323, "delantero", newells))
-
 }

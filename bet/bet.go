@@ -10,7 +10,7 @@ type Bet struct {
 	gambler						models.Gambler
 	match						match.Match
 	//Optional
-	PlayerThatScoreFirstGoal	models.Player
+	PlayerThatScoreFirstGoal	*models.Player
 	totalOfGoals				int
 	numberOfHomeGoals			int
 	numberOfAwayGoals			int
@@ -32,7 +32,7 @@ func InitBet(amount int, g models.Gambler, match2 match.Match) *Bet {
 	}
 }
 
-func (bb *Builder) WithPlayerThatScoreFirstGoal(p models.Player) *Builder {
+func (bb *Builder) WithPlayerThatScoreFirstGoal(p *models.Player) *Builder {
 	bb.bet.PlayerThatScoreFirstGoal = p
 	return bb
 }

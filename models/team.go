@@ -1,16 +1,21 @@
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type Team struct {
 	Name string
-	Id   int
+	objId primitive.ObjectID
 }
 
-func InitTeam( name string, id int ) Team {
+func InitTeam( name string ) Team {
 	return Team {
 		Name: name,
-		Id:   id,
 	}
 }
 
 func (team Team) GetTeamName() string { return team.Name }
-func (team Team) GetTeamId() int { return team.Id }
+func (team Team) GetTeamObjId() primitive.ObjectID { return team.objId }
+
+func (team *Team) SetTeamObjId(objId primitive.ObjectID) {
+	team.objId = objId
+}

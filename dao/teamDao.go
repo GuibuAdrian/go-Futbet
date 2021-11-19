@@ -1,12 +1,20 @@
 package dao
 
 import (
-	"errors"
+	"fmt"
 	"github.com/GuibuAdrian/go-Futbet/models"
+	"github.com/kamva/mgm/v3"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type TeamDao struct {
 	teamSlice []models.Team
+}
+
+type Team struct {
+	Name	string		`json:"name" bson:"name"`
+	mgm.DefaultModel	`bson:",inline"`
 }
 
 var teamDaoInstance *TeamDao
@@ -14,25 +22,49 @@ var teamDaoInstance *TeamDao
 func TeamDaoGetInstance() *TeamDao {
 	if teamDaoInstance == nil {
 		teamDaoInstance = &TeamDao{}
-
-		initializeTeamDao()
 	}
 	return teamDaoInstance
 }
 
+func NewTeam(Name string) *Team {
+	return &Team{
+		Name: Name,
+	}
+}
 func (teamDao *TeamDao) Create(team models.Team) {
-	teamDao.teamSlice = append(teamDao.teamSlice, team)
+	teamCreate := NewTeam(team.GetTeamName())
+	errCreate := mgm.Coll(teamCreate).Create(teamCreate)
+	if errCreate != nil {
+		fmt.Println(errCreate)
+	}
+	//teamDao.teamSlice = append(teamDao.teamSlice, team)
 }
 
-func (teamDao TeamDao) Read(id int) (models.Team, error) {
-	team := models.Team{}
+func (teamDao TeamDao) Read(id primitive.ObjectID) (models.Team, error) {
+	team := &Team{}
+	coll := mgm.Coll(team)
+	err := coll.FindByID(id, team)
+	teamM := models.InitTeam(team.Name)
+	teamM.SetTeamObjId(team.DefaultModel.ID)
+	return teamM, err
+	/*team := models.Team{}
 	for _, team := range teamDao.teamSlice {
 		if team.GetTeamId() == id {
 			return team, nil
 		}
 	}
 
-	return team, errors.New("team not found")
+	return team, errors.New("team not found")*/
+}
+
+func (teamDao *TeamDao) ReadByName(teamName string) (models.Team, error) {
+	team := &Team{}
+	coll := mgm.Coll(team)
+
+	err := coll.First(bson.M{"name":teamName}, team)
+	teamM := models.InitTeam(team.Name)
+	teamM.SetTeamObjId(team.IDField.ID)
+	return teamM, err
 }
 
 func (teamDao TeamDao) Update(team models.Team)  {
@@ -53,8 +85,8 @@ func (teamDao TeamDao) GetTeamSlice() []models.Team {
 }
 
 func initializeTeamDao() {
-	TeamDaoGetInstance().Create(models.InitTeam("River", 1))
-	TeamDaoGetInstance().Create(models.InitTeam("Newells", 2))
-	TeamDaoGetInstance().Create(models.InitTeam("Banfield", 3))
-	TeamDaoGetInstance().Create(models.InitTeam("Velez", 4))
+	TeamDaoGetInstance().Create(models.InitTeam("River"))
+	TeamDaoGetInstance().Create(models.InitTeam("Newells"))
+	TeamDaoGetInstance().Create(models.InitTeam("Banfield"))
+	TeamDaoGetInstance().Create(models.InitTeam("Velez"))
 }

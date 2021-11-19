@@ -20,7 +20,7 @@ func (teamRep TeamRepository) GetTeamPlayers() []models.Player {
 
 	for _, playerVal := range playerSlice {
 		if playerVal.GetTeam() == teamRep.Team {
-			playerTeamSlice = append(playerTeamSlice, playerVal)
+			playerTeamSlice = append(playerTeamSlice, *playerVal)
 		}
 	}
 
