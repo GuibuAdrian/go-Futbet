@@ -48,9 +48,7 @@ func (playerDao *PlayerDao) Create(player *models.Player)  {
 
 	// Make sure to pass the model by reference.
 	errorCreate := mgm.Coll(playerCreate).Create(playerCreate)
-	if errorCreate != nil {
-		fmt.Println(errorCreate)
-	}
+	check(errorCreate)
 	//playerDao.playerSlice = append(playerDao.playerSlice, player)
 }
 
@@ -60,9 +58,8 @@ func (playerDao PlayerDao) ReadByPlayerName(playerName string, teamId primitive.
 
 	_ = coll.First(bson.M{"name":playerName, "teamid": teamId}, player)
 	team,err := TeamDaoGetInstance().Read(teamId)
-	if err != nil {
-		fmt.Println(err)
-	}
+	check(err)
+
 	playerM := models.InitPlayer(player.Name, player.Number, player.Number, player.Position, team)
 	return playerM, errors.New("player not found")
 }
@@ -77,17 +74,35 @@ func (playerDao PlayerDao) Read(idP int) (*models.Player, error) {
 	return player, errors.New("player not found")
 }
 
-func (playerDao *PlayerDao) Update(player models.Player)  {
-	//todo
+func (playerDao *PlayerDao) Update(playerId string , player *models.Player)  {
+	playerU := &Player{}
+	coll := mgm.Coll(playerU)
+	err := coll.FindByID(playerId, playerU)
+	check(err)
+
+	playerU.Name = player.GetName()
+	playerU.Id = player.GetId()
+	playerU.TeamId = player.GetTeam().GetTeamObjId()
+	playerU.Number = player.GetNumber()
+	playerU.Position = player.GetPosition()
+
+	err = coll.Update(playerU)
+	check(err)
 }
 
-func (playerDao *PlayerDao) Delete(player models.Player)  {
-	for posV, playerVal := range playerDao.playerSlice {
+func (playerDao *PlayerDao) Delete(playerId string)  {
+	/*for posV, playerVal := range playerDao.playerSlice {
 		if playerVal == &player{
 			playerDao.playerSlice = append(playerDao.playerSlice[:posV], playerDao.playerSlice[posV+1:]...)
 			break
 		}
-	}
+	}*/
+	playerD := &Player{}
+	coll := mgm.Coll(playerD)
+	err := coll.FindByID(playerId, playerD)
+	check(err)
+	err = coll.Delete(playerD)
+	check(err)
 }
 
 func (playerDao PlayerDao) GetPlayerSlice() []*models.Player{
@@ -119,4 +134,10 @@ func initializePlayerDao() {
 	PlayerDaoGetInstance().Create(models.InitPlayer("Castro", 36, 3636363, "medio C", newells))
 	PlayerDaoGetInstance().Create(models.InitPlayer("Sordo", 26, 2626262, "medio C", newells))
 	PlayerDaoGetInstance().Create(models.InitPlayer("Scocco", 32, 3232323, "delantero", newells))
+}
+
+func check(e error) {
+	if e != nil {
+		fmt.Println(e)
+	}
 }

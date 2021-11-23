@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/GuibuAdrian/go-Futbet/dao"
 	db "github.com/GuibuAdrian/go-Futbet/db"
+	"github.com/GuibuAdrian/go-Futbet/models"
 	"github.com/kamva/mgm/v3"
 )
 
@@ -26,6 +27,12 @@ func main() {
 	fmt.Println(p)
 	fmt.Println(p.GetName())
 
+	teamPrueba, _ := teamDao.ReadByName("Newells")
+	playerPrueba := models.InitPlayer("Prueba2", 000000002, 000000002, "prueba2", teamPrueba)
+	//playerDao.Create(playerPrueba)
+	playerDao.Update("619ce00c194bc222fcf65c77", playerPrueba)
+
+	playerDao.Delete("619ce00c194bc222fcf65c77")
 	//
 	//playerDao := dao.PlayerDaoGetInstance()
 	//p := playerDao.GetPlayerSlice()[0]
