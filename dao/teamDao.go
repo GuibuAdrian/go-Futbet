@@ -44,8 +44,7 @@ func (teamDao TeamDao) Read(id primitive.ObjectID) (models.Team, error) {
 	team := &Team{}
 	coll := mgm.Coll(team)
 	err := coll.FindByID(id, team)
-	teamM := models.InitTeam(team.Name)
-	teamM.SetTeamObjId(team.DefaultModel.ID)
+	teamM := models.InitTeam(team.Name, team.DefaultModel.ID)
 	return teamM, err
 	/*team := models.Team{}
 	for _, team := range teamDao.teamSlice {
@@ -62,8 +61,7 @@ func (teamDao *TeamDao) ReadByName(teamName string) (models.Team, error) {
 	coll := mgm.Coll(team)
 
 	err := coll.First(bson.M{"name":teamName}, team)
-	teamM := models.InitTeam(team.Name)
-	teamM.SetTeamObjId(team.IDField.ID)
+	teamM := models.InitTeam(team.Name, team.DefaultModel.ID)
 	return teamM, err
 }
 
@@ -85,8 +83,8 @@ func (teamDao TeamDao) GetTeamSlice() []models.Team {
 }
 
 func initializeTeamDao() {
-	TeamDaoGetInstance().Create(models.InitTeam("River"))
-	TeamDaoGetInstance().Create(models.InitTeam("Newells"))
-	TeamDaoGetInstance().Create(models.InitTeam("Banfield"))
-	TeamDaoGetInstance().Create(models.InitTeam("Velez"))
+	TeamDaoGetInstance().Create(models.InitTeam("River", primitive.ObjectID{}))
+	TeamDaoGetInstance().Create(models.InitTeam("Newells", primitive.ObjectID{}))
+	TeamDaoGetInstance().Create(models.InitTeam("Banfield", primitive.ObjectID{}))
+	TeamDaoGetInstance().Create(models.InitTeam("Velez", primitive.ObjectID{}))
 }
